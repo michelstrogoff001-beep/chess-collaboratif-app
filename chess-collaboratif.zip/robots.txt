@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Sitemap: https://michelstrogoff001-beep.github.io/chess-collaboratif-app/sitemap.xml
+
+# Autoriser les moteurs de recherche à indexer le site
+# Interdire l'accès aux fichiers sensibles
+Disallow: /server/
+Disallow: /*.json$
+Disallow: /*.js.map
+Disallow: /node_modules/
