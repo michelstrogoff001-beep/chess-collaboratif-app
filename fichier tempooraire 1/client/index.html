@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Échecs collaboratif — vote d’équipe</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Échecs collaboratif</h1>
+    <p class="subtitle">Votez pour un coup avec votre équipe</p>
+  </header>
+
+  <section id="lobby" class="panel lobby-panel">
+    <div class="intro" role="region" aria-label="Comment jouer">
+      <h2 class="intro-title">Comment ça marche ?</h2>
+      <p class="intro-text">
+        Deux équipes s’affrontent aux échecs : les <strong>Blancs</strong> et les <strong>Noirs</strong>.
+        Plusieurs personnes peuvent être dans chaque équipe. À chaque tour, <strong>toute l’équipe au trait</strong> vote
+        pour le coup à jouer (bouton ou glissement sur l’échiquier). Les votes sont visibles par tout le monde.
+        Quand le <strong>chronomètre</strong> de 30 secondes se termine, le <strong>coup le plus voté</strong> est joué automatiquement.
+        Tu peux utiliser une fois par partie un <strong>double vote</strong>. Utilise le <strong>chat</strong> pour te coordonner avec ton équipe.
+      </p>
+    </div>
+
+    <label for="nickname">Pseudo</label>
+    <input id="nickname" type="text" placeholder="Ton pseudo" maxlength="24">
+    <label for="room">Nom de la partie</label>
+    <input id="room" type="text" placeholder="ex: partie-amis" maxlength="32">
+    <label for="teamSelect">Équipe</label>
+    <select id="teamSelect" aria-label="Choisir ton équipe">
+      <option value="white">Blancs</option>
+      <option value="black">Noirs</option>
+      <option value="auto">Au choix du serveur (équilibre)</option>
+    </select>
+    <button id="btnJoin" type="button">Rejoindre</button>
+    <p id="lobbyMsg" class="msg"></p>
+  </section>
+
+  <main id="game" class="game hidden">
+    <div class="status-bar">
+      <div><strong>Toi :</strong> <span id="yourTeam">—</span></div>
+      <div><strong>Tour :</strong> <span id="activeTeam">—</span> — <span id="turnColor">—</span></div>
+      <div class="timer-wrap"><strong>Temps :</strong> <span id="timer">30</span>s</div>
+      <div><strong>Statut :</strong> <span id="gameStatus">—</span></div>
+    </div>
+
+    <div class="layout">
+      <div class="board-wrap">
+        <div id="board" style="width: 400px"></div>
+        <p class="board-hint">Équipe au trait : glisse une pièce pour voter (coup légal). À la fin du timer, c’est le coup le plus voté qui est joué — pas forcément le tien.</p>
+      </div>
+      <div class="side">
+        <h2>Votes sur les coups légaux</h2>
+        <p class="hint">Liste triée par nombre de votes (du plus au moins voté). Tout le monde voit les votes. Seule l’équipe au tour peut voter (bouton ou glisser-déposer).</p>
+        <div id="voteControls">
+          <button id="btnDouble" type="button" class="btn-double" disabled>Activer double vote (1× / partie)</button>
+          <button id="btnAI" type="button" class="btn-ai" disabled>💡 Conseil IA (1× / partie)</button>
+          <p id="doubleStatus" class="small"></p>
+          <p id="aiStatus" class="small"></p>
+        </div>
+        <div id="movesList" class="moves-list"></div>
+        <h3>Joueurs</h3>
+        <ul id="playersList" class="players"></ul>
+      </div>
+      <div class="chat-panel">
+        <h2>Chat équipe</h2>
+        <div class="voice-controls">
+          <button id="voiceToggleBtn" type="button" class="voice-btn" disabled>🎤 Activer vocal</button>
+          <button id="voiceMuteBtn" type="button" class="voice-btn muted" disabled>🔇</button>
+          <div id="voiceStatus" class="voice-status"></div>
+          <div id="voiceParticipants" class="voice-participants"></div>
+        </div>
+        <div id="chatMessages" class="chat-messages" aria-live="polite"></div>
+        <div class="chat-input-row">
+          <label for="chatInput" class="visually-hidden">Message</label>
+          <input id="chatInput" type="text" maxlength="500" placeholder="Message à votre équipe…" autocomplete="off">
+          <button id="chatSend" type="button">Envoyer</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="voice-chat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
